@@ -1,0 +1,4 @@
+#!python
+
+import jpinstall
+jpinstall.cli.main()
