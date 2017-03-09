@@ -73,7 +73,7 @@ class JenkinsPlugins(object):
                         return
                     except requests.exceptions.HTTPError as ex:
                         if i < retries:
-                            print "Jenkins returned" + ex.strerror
+                            print "Jenkins returned error"
                             print "Retrying in 20s"
                         else:
                             raise ex
