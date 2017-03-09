@@ -61,6 +61,8 @@ def install_plugins(jenkins, opts):
             try:
                 response = jenkins.upload(path)
                 response.raise_for_status()
+                if opts['--restart']:
+                    jenkins.restart(5, 20)
             except requests.exceptions.HTTPError as ex:
                 print ex.strerror
 
