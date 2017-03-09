@@ -17,13 +17,13 @@ Usage
 -----
 ```
 Usage
- jpi install [--conf conf] [--tmp tmpdir] [--dry-run] [--restart] <file_with_packages>
+ jpi install [--conf conf] [--tmp tmpdir] [--dry-run] <file_with_packages>
  jpi list [--conf conf] [--tmp tmpdir]
+ jpi restart
 
 Options:
   --conf conf   Configuration file [default: ./config.ini]
   --tmp tmpdir  Configuration file [default: /tmp/]
   --dry-run     Don't install any packages on jenkins
-  --restart     Force jenkins restart after plugin installation
 ```
 
