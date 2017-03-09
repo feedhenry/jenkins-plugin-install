@@ -2,13 +2,14 @@
 
 Usage:
   jpi install [--conf conf] [--tmp tmpdir] [--dry-run] [--restart] <file_with_packages>
-  jpi list [--conf conf] [--tmp tmpdir]
+  jpi list [--conf conf]
+  jpi restart [--conf conf]
+  jpi version [--conf conf]
 
 Options:
   --conf conf   Configuration file [default: ./config.ini]
   --tmp tmpdir  Configuration file [default: /tmp/]
   --dry-run     Don't install any packages on jenkins
-  --restart     Force jenkins restart after plugin installation
 """
 
 import ConfigParser
@@ -62,9 +63,6 @@ def install_plugins(jenkins, opts):
                 response.raise_for_status()
             except requests.exceptions.HTTPError as ex:
                 print ex.strerror
-        if opts['--restart']:
-            response = jenkins.restart()
-            response.raise_for_status()
 
 def main():
     """
@@ -73,7 +71,6 @@ def main():
     opts = docopt(__doc__)
     config = ConfigParser.ConfigParser()
     config.read([opts['--conf']])
-    print config
     user = config.get('jenkins', 'user')
     password = config.get('jenkins', 'password')
     url = config.get('jenkins', 'url')
@@ -86,3 +83,13 @@ def main():
     if opts['install']:
         install_plugins(jenkins, opts)
         return
+    if opts['restart']:
+        jenkins.restart(5, 20)
+        return
+    if opts['version']:
+        response = jenkins.version()
+        print response
+        return
+
+if __name__ == "__main__":
+    main()
