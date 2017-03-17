@@ -23,7 +23,7 @@ def start_jenkins():
 def stop_jenkins():
     kill_and_remove('jenkins_docker')
 
-j = jpi.jenkins.JenkinsPlugins("http://localhost:8080", "admin", "admin")
+j = jpi.jenkins.JenkinsPlugins("http://127.0.0.1:8080", "admin", "admin")
 
 def setUpModule():
     start_jenkins()
