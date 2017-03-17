@@ -50,93 +50,6 @@ EXPECTED_PLUGIN_LIST = [
     ['rebuild', '1.25']
 ]
 
-EXPECTED_PRE_INSTALL = {
-    u'git-client': {u'2.1.0': []},
-    u'handlebars': {u'1.1.1': []},
-    u'credentials-binding': {u'1.10': []},
-    u'pipeline-github-lib': {u'1.0': []},
-    u'credentials': {u'2.1.11': []},
-    u'scm-api': {u'2.0.4': []},
-    u'pubsub-light': {u'1.7': []},
-    u'blueocean-config': {u'1.0.0-b24': []},
-    u'plain-credentials': {u'1.3': []},
-    u'workflow-multibranch': {u'2.12': []},
-    u'pipeline-utility-steps': {u'1.1.5': []},
-    u'blueocean-web': {u'1.0.0-b24': []},
-    u'junit': {u'1.20': []},
-    u'blueocean-autofavorite': {u'0.6': []},
-    u'multiple-scms': {u'0.6': []},
-    u'authentication-tokens': {u'1.3': []},
-    u'token-macro': {u'2.0': []},
-    u'pipeline-rest-api': {u'2.2': []},
-    u'pipeline-build-step': {u'2.1': []}, 
-    u'docker-workflow': {u'1.10': []}, 
-    u'github-organization-folder': {u'1.6': []}, 
-    u'mercurial': {u'1.54': []}, 
-    u'blueocean-dashboard': {u'1.0.0-b24': []}, 
-    u'branch-api': {u'2.0.2': []}, 
-    u'blueocean-commons': {u'1.0.0-b24': []}, 
-    u'pipeline-graph-analysis': {u'1.3': []}, 
-    u'pipeline-model-api': {u'1.0.2': []}, 
-    u'docker-commons': {u'1.6': []}, 
-    u'display-url-api': {u'1.1.1': []}, 
-    u'blueocean': {u'1.0.0-b23': []}, 
-    u'workflow-support': {u'2.12': []}, 
-    u'openshift-client': {u'0.9.2': []}, 
-    u'blueocean-rest': {u'1.0.0-b24': []}, 
-    u'jquery-detached': {u'1.2.1': []}, 
-    u'workflow-basic-steps': {u'2.3': []}, 
-    u'github-api': {u'1.84': []}, 
-    u'git-server': {u'1.6': []}, 
-    u'script-security': {u'1.25': []}, 
-    u'openshift-sync': {u'0.1.7': []}, 
-    u'matrix-auth': {u'1.4': []},
-    u'blueocean-display-url': {u'1.5.1': []},
-    u'blueocean-personalization': {u'1.0.0-b24': []}, 
-    u'blueocean-pipeline-api-impl': {u'1.0.0-b24': []}, 
-    u'blueocean-jwt': {u'1.0.0-b24': []},
-    u'pipeline-input-step': {u'2.5': []},
-    u'subversion': {u'2.5.7': []}, 
-    u'git': {u'3.0.4': []}, 
-    u'workflow-step-api': {u'2.8': []}, 
-    u'workflow-remote-loader': {u'1.2': []}, 
-    u'workflow-durable-task-step': {u'2.8': []}, 
-    u'blueocean-events': {u'1.0.0-b24': []}, 
-    u'openshift-pipeline': {u'1.0.42': []}, 
-    u'github-branch-source': {u'2.0.3': []}, 
-    u'blueocean-i18n': {u'1.0.0-b24': []}, 
-    u'ssh-credentials': {u'1.12': []}, 
-    u'pipeline-model-definition': {u'1.0.2': []}, 
-    u'blueocean-git-pipeline': {u'1.0.0-b24': []}, 
-    u'matrix-project': {u'1.7.1': []}, 
-    u'workflow-cps': {u'2.25': []}, 
-    u'favorite': {u'2.0.4': []}, 
-    u'pipeline-stage-view': {u'2.2': []}, 
-    u'mailer': {u'1.19': []}, 
-    u'cloudbees-folder': {u'5.17': []}, 
-    u'workflow-api': {u'2.8': []}, 
-    u'workflow-cps-global-lib': {u'2.6': []}, 
-    u'ace-editor': {u'1.1': []}, 
-    u'pipeline-stage-tags-metadata': {u'1.0.2': []}, 
-    u'workflow-aggregator': {u'2.1': []}, 
-    u'sse-gateway': {u'1.15': []}, 
-    u'structs': {u'1.5': []}, 
-    u'momentjs': {u'1.1.1': []}, 
-    u'icon-shim': {u'2.0.3': []}, 
-    u'blueocean-github-pipeline': {u'1.0.0-b24': []}, 
-    u'pipeline-stage-step': {u'2.2': []}, 
-    u'mapdb-api': {u'1.0.1.0': []}, 
-    u'kubernetes': {u'0.10': []}, 
-    u'jackson2-api': {u'2.7.3': []}, 
-    u'variant': {u'1.1': []}, 
-    u'durable-task': {u'1.12': []}, 
-    u'metrics': {u'3.1.2.9': []}, 
-    u'pipeline-model-declarative-agent': {u'1.0.2': []}, 
-    u'workflow-job': {u'2.9': []}, 
-    u'github': {u'1.26.0': []}, 
-    u'blueocean-rest-impl': {u'1.0.0-b24': []}, 
-    u'openshift-login': {u'0.11': []}, 
-    u'workflow-scm-step': {u'2.3': []}}
 
 EXPECTED_DOWNLOADS = [
     ['envinject', '1.93.1', './tmp/envinject_1.93.1.hpi'],
@@ -163,14 +76,11 @@ def test_plugin_list():
     plugins_to_install = jpi.cli.get_plugins_to_install("./fixtures/plugins.txt")
     nt.eq_(plugins_to_install, EXPECTED_PLUGIN_LIST)
 
-def test_clean_pre_install():
-    installed_plugins = j.plugins()
-    nt.eq_(installed_plugins, EXPECTED_PRE_INSTALL)
 def test_plugin_install():
     plugins, downloaded = jpi.download.download_all(
         EXPECTED_PLUGIN_LIST,
         "./tmp",
-        EXPECTED_PRE_INSTALL, [])
+        j.plugins(), [])
     nt.eq_(downloaded, EXPECTED_DOWNLOADS)
     j.install_plugins(plugins, downloaded)
     plugins, downloaded = jpi.download.download_all(
