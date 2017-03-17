@@ -4,7 +4,7 @@ Utility functions for downloading jenkins packages
 import os
 import shutil
 import requests
-from jpinstall import deps
+import deps
 
 def download_file(url, path):
     """

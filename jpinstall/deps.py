@@ -4,6 +4,7 @@ Helper functions related to resolving *.hpi dependencies
 import sys
 import re
 from zipfile import ZipFile
+import copy
 
 def remove_dep_metadata(depstr):
     """
@@ -41,7 +42,9 @@ def dep_str_to_data(plugin_str):
     """
     return [assume_min_or_latest(remove_dep_metadata(x))
             for x in plugin_str.split(",")
-            if x != "" and not "resolution:=optional" in x]
+            if x != ""]
+            # TODO: if optional deps are already installed, you need to check the version
+            # and not "resolution:=optional" in x]
 
 def str_to_ver(version):
     """
@@ -115,10 +118,22 @@ def deduplicate_downloads(plugins, downloaded):
     Function to remove references to downloaded plugins,
     where there is already a newer version present.
     """
-    return [
+    return list(reversed([
         [plugin, version, path]
         for plugin, version, path in downloaded
-        if get_latest_version_present(plugins, plugin) == str_to_ver(version)]
+        if get_latest_version_present(plugins, plugin) == str_to_ver(version)]))
+
+def installable_downloads(installed,plugins,downloaded):
+    installable = []
+    remaining = []
+    for plugin, version, path in downloaded:
+        deps = plugins[plugin][version]
+        if all(is_greater_version_present(installed, dep, dep_ver)
+               for dep, dep_ver in deps):
+            installable.append([plugin, version, path])
+        else:
+            remaining.append([plugin, version, path])
+    return installable, remaining
 
 def get_manifest_for_hpi(path):
     """
