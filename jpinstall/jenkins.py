@@ -88,7 +88,7 @@ class JenkinsPlugins(object):
                     response = self.version()
                     print "Jenkins " + response + " running"
                     return
-                except requests.exceptions.HTTPError as ex:
+                except Exception as ex:
                     if i < retries:
                         print "Jenkins returned error"
                         print "Retrying in 20s"
