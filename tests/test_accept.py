@@ -28,7 +28,8 @@ j = jpi.jenkins.JenkinsPlugins("http://127.0.0.1:8080", "admin", "admin")
 def setUpModule():
     start_jenkins()
     j.wait(10, 10)
-    shutil.rmtree('./tmp')
+    if os.path.isdir('./tmp'):
+        shutil.rmtree('./tmp')
     os.mkdir('./tmp')
     print "SETUP!"
 
