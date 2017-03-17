@@ -15,7 +15,7 @@ def kill_and_remove(ctr_name):
 def start_jenkins():
     ctr_name = 'jenkins_docker'
     p = Popen(['docker', 'run', '-d', '--name', ctr_name,
-               '-e', 'JENKINS_PASSWORD=admin', '-p', '8080:8080', '-p', '50000:50000',
+               '-e', 'JENKINS_PASSWORD=admin', '-p', '127.0.0.1:8080:8080', '-p', '50000:50000',
                 'openshift/jenkins-2-centos7'],
               stdout=PIPE)
     return p
