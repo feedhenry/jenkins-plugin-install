@@ -105,7 +105,7 @@ class JenkinsPlugins(object):
                 auth=(self.username, self.password),
                 verify=False)
             response.raise_for_status()
-        except requests.exceptions.HTTPError as ex:
+        except Exception as ex:
             if retries > 0:
                 self.wait(retries, pause)
             else:
