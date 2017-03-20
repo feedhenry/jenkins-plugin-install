@@ -48,7 +48,7 @@ class JenkinsPlugins(object):
             installable, remaining = installable_downloads(installed, plugins, downloaded)
             self.upload_plugins(installable)
             time.sleep(30)
-            self.restart(5, 20)
+            self.restart(6, 30)
 
     def plugins(self):
         """
