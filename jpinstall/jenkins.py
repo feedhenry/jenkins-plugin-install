@@ -93,7 +93,7 @@ class JenkinsPlugins(object):
                         print "Jenkins returned error"
                         print "Retrying in 20s"
                     else:
-                        raise ex
+                        raise Exception("Couldn't resume after " + str(retries*pause) + "s")
 
     def restart(self, retries, pause):
         """
