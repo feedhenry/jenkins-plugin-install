@@ -4,6 +4,7 @@ Plugin management utilities for interacting with jenkins
 import time
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from deps import installable_downloads
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
@@ -28,6 +29,27 @@ class JenkinsPlugins(object):
         response.raise_for_status()
         return response.text
 
+    def upload_plugins(self, downloaded):
+        errors = []
+        installed = []
+        for plugin, version, path in downloaded:
+            print "Uploading " + path
+            try:
+                self.upload(path)
+                installed.append([plugin, version])
+            except requests.exceptions.HTTPError as ex:
+                errors.append([plugin, version, ex.strerror])
+        return installed, errors
+
+    def install_plugins(self, plugins, downloaded):
+        remaining = downloaded
+        while len(remaining) > 0:
+            installed = self.plugins()
+            installable, remaining = installable_downloads(installed, plugins, downloaded)
+            self.upload_plugins(installable)
+            time.sleep(30)
+            self.restart(6, 30)
+
     def plugins(self):
         """
         Returns the list of plugins in format {name:{version:[]}
@@ -47,11 +69,31 @@ class JenkinsPlugins(object):
         Uploads a file to the plugin upload endpoint of jenkins.
         """
         with open(path, 'rb') as hpi:
-            return requests.post(
+            response = requests.post(
                 self.url+"/pluginManager/uploadPlugin",
                 auth=(self.username, self.password),
                 verify=False,
                 files={'files':hpi})
+            response.raise_for_status()
+            return response
+
+    def wait(self, retries, pause):
+        """
+        Polls jenkins untill it is able to return a version
+        """
+        if retries > 0:
+            for i in range(0, retries):
+                time.sleep(pause)
+                try:
+                    response = self.version()
+                    print "Jenkins " + response + " running"
+                    return
+                except Exception as ex:
+                    if i < retries:
+                        print "Jenkins returned error"
+                        print "Retrying in 20s"
+                    else:
+                        raise Exception("Couldn't resume after " + str(retries*pause) + "s")
 
     def restart(self, retries, pause):
         """
@@ -63,20 +105,9 @@ class JenkinsPlugins(object):
                 auth=(self.username, self.password),
                 verify=False)
             response.raise_for_status()
-        except requests.exceptions.HTTPError as ex:
+        except Exception as ex:
             if retries > 0:
-                for i in range(0, retries):
-                    time.sleep(pause)
-                    try:
-                        response = self.version()
-                        print "Jenkins " + response + " running"
-                        return
-                    except requests.exceptions.HTTPError as ex:
-                        if i < retries:
-                            print "Jenkins returned error"
-                            print "Retrying in 20s"
-                        else:
-                            raise ex
+                self.wait(retries, pause)
             else:
                 raise ex
         return

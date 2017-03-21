@@ -1,15 +1,6 @@
-docker-workflow:1.9.1
-ansible:0.5
-pipeline-milestone-step:1.2
-pipeline-model-api:0.7.1
-pipeline-rest-api:2.4
 envinject:1.93.1
 aws-credentials:1.17
 credentials-binding:1.10
-ws-cleanup:0.32
-jobConfigHistory:2.15
-copyartifact:1.38.1
 s3:0.10.10
 ssh-agent:1.13
 extended-choice-parameter:0.75
-rebuild:1.25
