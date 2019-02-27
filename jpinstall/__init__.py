@@ -1,6 +1,4 @@
-"""
-Jenkins Plugin Install module
-"""
+"""Jenkins Plugin Install module"""
 import jpinstall.deps
 import jpinstall.download
 import jpinstall.jenkins

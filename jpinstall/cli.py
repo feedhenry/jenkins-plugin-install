@@ -1,4 +1,4 @@
-"""Jenkins Package Install
+"""Main method of Jenkins Package Install.
 
 Usage:
   jpi install [--conf conf] [--tmp tmpdir] [--dry-run] [--restart] <file_with_packages>
@@ -12,26 +12,25 @@ Options:
   --dry-run     Don't install any packages on jenkins
 """
 
-import ConfigParser
+from configparser import ConfigParser
 
-import requests
 from docopt import docopt
 
-from deps import deduplicate_downloads, plugin_str_to_data, installable_downloads
-from download import download_all
-from jenkins import JenkinsPlugins
+from jpinstall.deps import deduplicate_downloads, plugin_str_to_data
+from jpinstall.download import download_all
+from jpinstall.jenkins import JenkinsPlugins
 
 
 def list_plugins(plugins):
-    """
-    Utility function to pretty print the list of plugins
-    """
+    """Utility function to pretty print the list of plugins."""
     for plugin in plugins:
         for version in plugins[plugin]:
-            print plugin+":"+version
+            print(plugin + ":" + version)
     return
 
+
 def get_plugins_to_install(path):
+    """Utility function to loads the file with list of plugins to install."""
     plugin_str = ""
     with open(path, 'r') as plugins_file:
         plugin_str = str(plugins_file.read())
@@ -39,9 +38,7 @@ def get_plugins_to_install(path):
 
 
 def install_plugins(jenkins, opts):
-    """
-    Implementation of the install sub-command
-    """
+    """Implementation of the install sub-command."""
     plugins = jenkins.plugins()
     path = opts['<file_with_packages>']
     plugins_to_install = get_plugins_to_install(path)
@@ -53,22 +50,21 @@ def install_plugins(jenkins, opts):
     downloaded = deduplicate_downloads(plugins, downloaded)
 
     if len(downloaded) > 0:
-        print "Plugins to be installed:"
+        print("Plugins to be installed:")
         for plugin, version, path in downloaded:
-            print plugin + ":" + version
+            print(plugin + ":" + version)
 
         if opts['--dry-run']:
-            print "Dry run, not uploading packages."
+            print("Dry run, not uploading packages.")
         else:
-            print "Uploading plugins to " + jenkins.url
+            print("Uploading plugins to " + jenkins.url)
             jenkins.install_plugins(plugins, downloaded)
     else:
-        print "No new plugins will be installed"
+        print("No new plugins will be installed")
+
 
 def main():
-    """
-    The main function stand-in
-    """
+    """The main function that calls the sub-commands."""
     opts = docopt(__doc__)
     config = ConfigParser.ConfigParser()
     config.read([opts['--conf']])
@@ -89,8 +85,9 @@ def main():
         return
     if opts['version']:
         response = jenkins.version()
-        print response
+        print(response)
         return
+
 
 if __name__ == "__main__":
     main()
