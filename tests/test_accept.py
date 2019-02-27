@@ -1,18 +1,19 @@
-import sys
 import shutil
 import os
 import nose.tools as nt  # contains testing tools like ok_, eq_, etc.
 import jpinstall as jpi
-from subprocess import Popen, PIPE
+
 
 def setUpModule():
     if os.path.isdir('./tmp'):
         shutil.rmtree('./tmp')
     os.mkdir('./tmp')
-    print "SETUP!"
+    print("SETUP!")
+
 
 def tearDownModule():
-    print "TEAR DOWN!"
+    print("TEAR DOWN!")
+
 
 EXPECTED_PLUGIN_LIST = [
     ['envinject', '1.93.1'],
@@ -62,9 +63,11 @@ EXPECTED_DOWNLOADS = [
     ['jquery', '1.11.2-0', './tmp/jquery_1.11.2-0.hpi']
 ]
 
+
 def test_plugin_list():
     plugins_to_install = jpi.cli.get_plugins_to_install("./fixtures/plugins.txt")
     nt.eq_(plugins_to_install, EXPECTED_PLUGIN_LIST)
+
 
 def test_plugin_download():
     plugins, downloaded = jpi.download.download_all(
@@ -72,5 +75,3 @@ def test_plugin_download():
         "./tmp",
         {}, [])
     nt.eq_(downloaded, EXPECTED_DOWNLOADS)
-
-
