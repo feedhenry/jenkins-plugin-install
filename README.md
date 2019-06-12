@@ -27,3 +27,12 @@ Options:
   --dry-run     Don't install any packages on jenkins
 ```
 
+Configuration File
+-----
+```
+[jenkins]
+user=admin                # Jenkins user id
+password=admin            # Jenkins user password
+url=http://localhost:8080 # Jenkins url
+csrf_enabled=false        # Set to 'true' if Prevent Cross Site Request Forgery exploits is enabled
+```

@@ -75,8 +75,9 @@ def main():
     user = config.get('jenkins', 'user')
     password = config.get('jenkins', 'password')
     url = config.get('jenkins', 'url')
+    csrf_enabled = config.get('jenkins', 'csrf_enabled')
 
-    jenkins = JenkinsPlugins(url, user, password)
+    jenkins = JenkinsPlugins(url, user, password, csrf_enabled)
 
     if opts['list']:
         list_plugins(jenkins.plugins())
