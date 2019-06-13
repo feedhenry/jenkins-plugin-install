@@ -13,19 +13,41 @@ class JenkinsPlugins(object):
     Class wrapping several plugin-related post-requests
     to interact with jenkins
     """
-    def __init__(self, url, username, password):
+    def __init__(self, url, username, password, csrf_enabled):
         self.url = url
         self.username = username
         self.password = password
+        self.csrf_enabled = csrf_enabled
 
+    def get_csrf_token(self):
+        """
+        Get crumb field and token from the Jenkins crumb issuer
+        """
+        response = requests.get(
+            self.url+"/crumbIssuer/api/json",
+            auth=(self.username, self.password),
+            verify=False
+        )
+        response.raise_for_status()
+
+        response = response.json()
+        return response['crumbRequestField'], response['crumb']
+    
     def script(self, script):
         """
         Executes a groovy script and returns response text
         """
+        headers = {}
+        if self.csrf_enabled == 'true':
+            csrf_field, csrf_token = self.get_csrf_token()
+            headers[csrf_field] = csrf_token
+
         response = requests.post(
             self.url+"/scriptText",
             auth=(self.username, self.password),
-            verify=False, data={'script':script})
+            headers= headers,
+            verify=False, 
+            data={'script':script})
         response.raise_for_status()
         return response.text
 
