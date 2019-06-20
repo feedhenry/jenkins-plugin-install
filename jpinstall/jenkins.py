@@ -66,6 +66,7 @@ class JenkinsPlugins(object):
     def install_plugins(self, plugins, downloaded):
         remaining = downloaded
         while len(remaining) > 0:
+            print("Remaining plugins to be installed: ", remaining)
             installed = self.plugins()
             installable, remaining = installable_downloads(installed, plugins, downloaded)
             self.upload_plugins(installable)
@@ -90,10 +91,16 @@ class JenkinsPlugins(object):
         """
         Uploads a file to the plugin upload endpoint of jenkins.
         """
+        headers = {}
+        if self.csrf_enabled == 'true':
+            csrf_field, csrf_token = self.get_csrf_token()
+            headers[csrf_field] = csrf_token
+
         with open(path, 'rb') as hpi:
             response = requests.post(
                 self.url+"/pluginManager/uploadPlugin",
                 auth=(self.username, self.password),
+                headers= headers,
                 verify=False,
                 files={'files':hpi})
             response.raise_for_status()
@@ -122,9 +129,15 @@ class JenkinsPlugins(object):
         Triggers a restart of the jenkins server
         """
         try:
+            headers = {}
+            if self.csrf_enabled == 'true':
+                csrf_field, csrf_token = self.get_csrf_token()
+                headers[csrf_field] = csrf_token
+
             response = requests.post(
                 self.url + "/safeRestart",
                 auth=(self.username, self.password),
+                headers= headers,
                 verify=False)
             response.raise_for_status()
         except Exception as ex:
