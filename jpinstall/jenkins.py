@@ -66,8 +66,7 @@ class JenkinsPlugins(object):
     def install_plugins(self, plugins, downloaded):
         remaining = downloaded
         while len(remaining) > 0:
-            print("Remaining: ", len(remaining))
-            print("Values: ", remaining)
+            print("Remaining plugins to be installed: ", remaining)
             installed = self.plugins()
             installable, remaining = installable_downloads(installed, plugins, downloaded)
             self.upload_plugins(installable)
@@ -104,7 +103,6 @@ class JenkinsPlugins(object):
                 headers= headers,
                 verify=False,
                 files={'files':hpi})
-            print response.status_code
             response.raise_for_status()
             return response
 
